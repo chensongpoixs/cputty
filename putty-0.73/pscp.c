@@ -197,6 +197,7 @@ static bool ssh_scp_recv(void *vbuf, size_t len)
 static void ssh_scp_init(void)
 {
     while (!backend_sendok(backend)) {
+		printf("[%s][%d]\n", __FUNCTION__, __LINE__);
         if (backend_exitcode(backend) >= 0) {
             errs++;
             return;
@@ -214,10 +215,16 @@ static void ssh_scp_init(void)
         using_sftp = fallback_cmd_is_sftp;
 
     if (verbose) {
-        if (using_sftp)
-            tell_user(stderr, "Using SFTP");
-        else
-            tell_user(stderr, "Using SCP1");
+		if (using_sftp)
+		{
+			printf("[%s][%d] Using SFTP\n", __FUNCTION__, __LINE__);
+			tell_user(stderr, "Using SFTP");
+		}
+		else
+		{
+			printf("[%s][%d] Using SCP1\n", __FUNCTION__, __LINE__);
+			tell_user(stderr, "Using SCP1");
+		}
     }
 }
 
@@ -1654,6 +1661,7 @@ static void source(const char *src)
             stat_bytes += k;
             if (time(NULL) != stat_lasttime || i + k == size) {
                 stat_lasttime = time(NULL);
+				printf("[%s][%d][stat_starttime = %lld][stat_lasttime = %lld]\n", __FUNCTION__, __LINE__, stat_starttime, stat_lasttime);
                 print_stats(last, size, stat_bytes,
                             stat_starttime, stat_lasttime);
             }
@@ -1698,6 +1706,7 @@ static void rsource(const char *src)
         char *filename;
         while ((filename = read_filename(dir)) != NULL) {
             char *foundfile = dupcat(src, "/", filename, NULL);
+			printf("[%s][%d][filename =%s]\n", __FUNCTION__, __LINE__, filename);
             source(foundfile);
             sfree(foundfile);
             sfree(filename);
@@ -1910,6 +1919,7 @@ static void sink(const char *targ, const char *src)
                 if (time(NULL) > stat_lasttime ||
                     received + read == act.size) {
                     stat_lasttime = time(NULL);
+					printf("[%s][%d][stat_starttime = %lld][stat_lasttime = %lld]\n", __FUNCTION__, __LINE__, stat_starttime, stat_lasttime);
                     print_stats(stat_name, act.size, stat_bytes,
                                 stat_starttime, stat_lasttime);
                 }
@@ -1989,6 +1999,8 @@ static void toremote(int argc, char *argv[])
                     recursive ? " -r" : "",
                     preserve ? " -p" : "",
                     targetshouldbedirectory ? " -d" : "", targ);
+	//[toremote][1992][host = 47.254.38.99][user = root][cmd = scp -t /root/test/chensong.txt]
+	printf("[%s][%d][host = %s][user = %s][cmd = %s]\n", __FUNCTION__, __LINE__, host, user, cmd);
     do_cmd(host, user, cmd);
     sfree(cmd);
 
@@ -2008,6 +2020,7 @@ static void toremote(int argc, char *argv[])
             run_err("%s: No such file or directory", src);
             continue;
         } else if (wc_type == WCTYPE_FILENAME) {
+			printf("[%s][%d][src =%s]\n", __FUNCTION__, __LINE__, src);
             source(src);
             continue;
         } else {
@@ -2021,6 +2034,7 @@ static void toremote(int argc, char *argv[])
             }
 
             while ((filename = wildcard_get_filename(wc)) != NULL) {
+				printf("[%s][%d][filename =%s]\n", __FUNCTION__, __LINE__, filename);
                 source(filename);
                 sfree(filename);
             }
@@ -2046,7 +2060,7 @@ static void tolocal(int argc, char *argv[])
 
     wsrc = argv[0];
     targ = argv[1];
-
+	printf("[%s][%d][wsrc = %s][targ = %s]\n", __FUNCTION__, __LINE__, wsrc, targ);
     /* Separate host from filename */
     host = wsrc;
     wsrc = colon(wsrc);
@@ -2076,6 +2090,7 @@ static void tolocal(int argc, char *argv[])
                     recursive ? " -r" : "",
                     preserve ? " -p" : "",
                     targetshouldbedirectory ? " -d" : "", src);
+	printf("[%s][%d][host = %s][user = %s][cmd = %s]\n", __FUNCTION__, __LINE__, host, user, cmd);
     do_cmd(host, user, cmd);
     sfree(cmd);
 

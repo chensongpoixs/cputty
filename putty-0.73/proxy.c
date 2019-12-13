@@ -432,6 +432,7 @@ Socket *new_connection(SockAddr *addr, const char *hostname,
         ret->negotiate = NULL;
 
         type = conf_get_int(conf, CONF_proxy_type);
+		printf("[%s][%d][proto_type = %d]\n", __FUNCTION__, __LINE__, type);
         if (type == PROXY_HTTP) {
             ret->negotiate = proxy_http_negotiate;
             proxy_type = "HTTP";
