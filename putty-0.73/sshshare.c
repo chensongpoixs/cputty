@@ -2074,14 +2074,20 @@ Socket *ssh_connection_sharing_init(
     Socket *sock, *toret = NULL;
     struct ssh_sharing_state *sharestate;
 
-    if (!conf_get_bool(conf, CONF_ssh_connection_sharing))
-        return NULL;                   /* do not share anything */
+	if (!conf_get_bool(conf, CONF_ssh_connection_sharing))
+	{
+		printf("[%s][%d]\n", __FUNCTION__, __LINE__);
+		return NULL;                   /* do not share anything */
+	}
     can_upstream = share_can_be_upstream &&
         conf_get_bool(conf, CONF_ssh_connection_sharing_upstream);
     can_downstream = share_can_be_downstream &&
         conf_get_bool(conf, CONF_ssh_connection_sharing_downstream);
-    if (!can_upstream && !can_downstream)
-        return NULL;
+	if (!can_upstream && !can_downstream)
+	{
+		printf("[%s][%d]\n", __FUNCTION__, __LINE__);
+		return NULL;
+	}
 
     sockname = ssh_share_sockname(host, port, conf);
 

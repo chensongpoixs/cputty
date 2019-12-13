@@ -246,6 +246,7 @@ int platform_ssh_share(const char *pi_name, Conf *conf,
                        char **logtext, char **ds_err, char **us_err,
                        bool can_upstream, bool can_downstream)
 {
+	printf("[%s][%d]\n", __FUNCTION__, __LINE__);
     char *dirname, *lockname, *sockname, *err;
     int lockfd;
     Socket *retsock;

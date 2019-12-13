@@ -729,6 +729,7 @@ static const char *connect_to_host(
      */
     ssh->connshare = NULL;
     ssh->attempting_connshare = true;  /* affects socket logging behaviour */
+	printf("[%s][%d]\n", __FUNCTION__, __LINE__);
     ssh->s = ssh_connection_sharing_init(
         ssh->savedhost, ssh->savedport, ssh->conf, ssh->logctx,
         &ssh->plug, &ssh->connshare);
@@ -768,7 +769,7 @@ static const char *connect_to_host(
             return err;
         }
         ssh->fullhostname = dupstr(*realhost);   /* save in case of GSSAPI */
-
+		printf("[%s][%d]\n", __FUNCTION__, __LINE__);
         ssh->s = new_connection(addr, *realhost, port,
                                 false, true, nodelay, keepalive,
                                 &ssh->plug, ssh->conf);
@@ -898,7 +899,7 @@ static const char *ssh_init(Seat *seat, Backend **backend_handle,
 
     random_ref(); /* do this now - may be needed by sharing setup code */
     ssh->need_random_unref = true;
-
+	printf("[%s][%d]\n", __FUNCTION__, __LINE__);
     p = connect_to_host(ssh, host, port, realhost, nodelay, keepalive);
     if (p != NULL) {
         /* Call random_unref now instead of waiting until the caller

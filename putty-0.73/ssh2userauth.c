@@ -233,7 +233,9 @@ static PktIn *ssh2_userauth_pop(struct ssh2_userauth_state *s)
     ssh2_userauth_filter_queue(s);
     return pq_pop(s->ppl.in_pq);
 }
-
+/**
+* 用户名和密码验证
+*/
 static void ssh2_userauth_process_queue(PacketProtocolLayer *ppl)
 {
     struct ssh2_userauth_state *s =

@@ -19,6 +19,7 @@ Socket *platform_new_connection(SockAddr *addr, const char *hostname,
                                 bool oobinline, bool nodelay, bool keepalive,
                                 Plug *plug, Conf *conf)
 {
+	printf("[%s][%d]\n", __FUNCTION__, __LINE__);
     char *cmd;
 
     int to_cmd_pipe[2], from_cmd_pipe[2], cmd_err_pipe[2], pid, proxytype;

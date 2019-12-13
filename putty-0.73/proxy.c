@@ -245,6 +245,7 @@ static int plug_proxy_accepting(Plug *p,
 static bool proxy_for_destination(SockAddr *addr, const char *hostname,
                                   int port, Conf *conf)
 {
+	printf("[%s][%d]\n", __FUNCTION__, __LINE__);
     int s = 0, e = 0;
     char hostip[64];
     int hostip_len, hostname_len;

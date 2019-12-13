@@ -603,6 +603,7 @@ int cmdline_process_param(const char *p, char *value,
                           "SSH protocol");
         else {
             cmdline_password = dupstr(value);
+			printf("[%s][%d][cmdline_password = %s]\n", __FUNCTION__, __LINE__, cmdline_password);
             /* Assuming that `value' is directly from argv, make a good faith
              * attempt to trample it, to stop it showing up in `ps' output
              * on Unix-like systems. Not guaranteed, of course. */
