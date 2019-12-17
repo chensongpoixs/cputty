@@ -130,7 +130,28 @@ int count234(tree234 * t)
     else
         return 0;
 }
+/**
+一棵2-3-4树是这样一棵树：
+它或者为空，或者是由以下三类节点组成的树：
 
+2-节点，有1个关键字和由关键字划分的2个区间链接；
+3-节点，有2个关键字和由关键字划分的3个区间链接；
+4-节点，有3个关键字和4个区间链接。
+
+
+插入操作
+在平衡2-3-4树中，每次进行插入仍然能在树中保持完美的平衡状态。例如，
+
+如果搜索终止处的节点是一个2-节点，就把它转变成一个3-节点。
+如果搜索终止处是一个3-节点，就把它转变成一个4-节点。
+如果搜索终止处是一个4-节点，而且其父节点也是一个4-节点，那该怎么办呢？
+
+解决办法是在自顶而下的过程中，如果遇到一个4-节点，就先把它分裂成两个2-节点，然后把关键字之一传递到父节点上，并改变该节点的父节点。如下图所示：
+
+通过这种方法，就能保证自上而下处理时，当前节点的父节点不会是一个4-节点。
+当然，当前节点的父节点不会是一个4-节点的递归前提，是根节点不是4-节点。如果根节点成为了4-节点，意味着树的高度要增加了。就把它变成3个2-节点组成的三角形，使树增高一层。如下图右下角所示：
+
+*/
 /*
  * Add an element e to a 2-3-4 tree t. Returns e on success, or if
  * an existing element compares equal, returns that.
@@ -160,6 +181,12 @@ static void *add234_internal(tree234 * t, void *e, int index)
     while (*np) {
         int childnum;
         n = *np;
+		/*printf("[%s][%s][%d]  node %p: %p/%d [%p] %p/%d [%p] %p/%d [%p] %p/%d\n", 
+			__FILE__, __FUNCTION__, __LINE__, n,
+			n->kids[0], n->counts[0], n->elems[0],
+			n->kids[1], n->counts[1], n->elems[1],
+			n->kids[2], n->counts[2], n->elems[2],
+			n->kids[3], n->counts[3]);*/
         LOG(("  node %p: %p/%d [%p] %p/%d [%p] %p/%d [%p] %p/%d\n",
              n,
              n->kids[0], n->counts[0], n->elems[0],
@@ -232,6 +259,12 @@ static void *add234_internal(tree234 * t, void *e, int index)
     right = NULL;
     rcount = 0;
     while (n) {
+		/*printf("[%s][%s][%d]  at %p: %p/%d [%p] %p/%d [%p] %p/%d [%p] %p/%d\n",
+			__FILE__, __FUNCTION__, __LINE__, n,
+			n->kids[0], n->counts[0], n->elems[0],
+			n->kids[1], n->counts[1], n->elems[1],
+			n->kids[2], n->counts[2], n->elems[2],
+			n->kids[3], n->counts[3]);*/
         LOG(("  at %p: %p/%d [%p] %p/%d [%p] %p/%d [%p] %p/%d\n",
              n,
              n->kids[0], n->counts[0], n->elems[0],

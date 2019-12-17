@@ -2363,6 +2363,7 @@ static void do_sftp_cleanup(void)
 
 int do_sftp(int mode, int modeflags, char *batchfile)
 {
+	printf("[%s][%s][%d]\n", __FILE__, __FUNCTION__, __LINE__);
     FILE *fp;
     int ret;
 

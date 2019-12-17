@@ -111,6 +111,9 @@ int first_fd(int *state, int *rwx)
     return next_fd(state, rwx);
 }
 
+/**
+* select backcall
+*/
 void select_result(int fd, int event)
 {
     struct fd *fdstruct = find234(fds, &fd, uxsel_fd_findcmp);

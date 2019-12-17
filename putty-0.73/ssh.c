@@ -1097,7 +1097,8 @@ static void ssh_unthrottle(Backend *be, size_t bufsize)
 static bool ssh_connected(Backend *be)
 {
     Ssh *ssh = container_of(be, Ssh, backend);
-    return ssh->s != NULL;
+	printf("[%s][%s][%d]\n", __FILE__, __FUNCTION__, __LINE__);
+	return ssh->s != NULL;
 }
 
 static bool ssh_sendok(Backend *be)

@@ -10,6 +10,7 @@
 typedef void (*packet_handler_fn_t)(PacketProtocolLayer *ppl, PktIn *pktin);
 
 struct PacketProtocolLayerVtable {
+	//ssh1_connection_vtable
     void (*free)(PacketProtocolLayer *);
     void (*process_queue)(PacketProtocolLayer *ppl);
     bool (*get_specials)(

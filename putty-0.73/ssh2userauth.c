@@ -133,6 +133,7 @@ PacketProtocolLayer *ssh2_userauth_new(
 {
     struct ssh2_userauth_state *s = snew(struct ssh2_userauth_state);
     memset(s, 0, sizeof(*s));
+	//脡猫脰脙 ssh脨颅脪茅碌脛auth_name auth_pass碌脛禄脴碌梅潞炉脢媒
     s->ppl.vt = &ssh2_userauth_vtable;
 
     s->successor_layer = successor_layer;
@@ -234,7 +235,7 @@ static PktIn *ssh2_userauth_pop(struct ssh2_userauth_state *s)
     return pq_pop(s->ppl.in_pq);
 }
 /**
-* 用户名和密码验证
+* 脫脙禄搂脙没潞脥脙脺脗毛脩茅脰陇
 */
 static void ssh2_userauth_process_queue(PacketProtocolLayer *ppl)
 {

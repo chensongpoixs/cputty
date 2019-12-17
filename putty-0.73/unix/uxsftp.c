@@ -469,6 +469,7 @@ char *dir_file_cat(const char *dir, const char *file)
  */
 static int ssh_sftp_do_select(bool include_stdin, bool no_fds_ok)
 {
+	printf("[%s][%s][%d]\n", __FILE__, __FUNCTION__, __LINE__);
     int i, *fdlist;
     size_t fdsize;
     int fd, fdcount, fdstate, rwx, ret;
@@ -485,8 +486,10 @@ static int ssh_sftp_do_select(bool include_stdin, bool no_fds_ok)
 
         /* Count the currently active fds. */
         i = 0;
-        for (fd = first_fd(&fdstate, &rwx); fd >= 0;
-             fd = next_fd(&fdstate, &rwx)) i++;
+		for (fd = first_fd(&fdstate, &rwx); fd >= 0; fd = next_fd(&fdstate, &rwx))
+		{
+			i++;
+		}
 
         if (i < 1 && !no_fds_ok && !toplevel_callback_pending()) {
             pollwrap_free(pw);
@@ -503,14 +506,16 @@ static int ssh_sftp_do_select(bool include_stdin, bool no_fds_ok)
          * them in fdlist as well.
          */
         fdcount = 0;
-        for (fd = first_fd(&fdstate, &rwx); fd >= 0;
-             fd = next_fd(&fdstate, &rwx)) {
+        for (fd = first_fd(&fdstate, &rwx); fd >= 0; fd = next_fd(&fdstate, &rwx)) 
+		{
             fdlist[fdcount++] = fd;
             pollwrap_add_fd_rwx(pw, fd, rwx);
         }
-
-        if (include_stdin)
-            pollwrap_add_fd_rwx(pw, 0, SELECT_R);
+		//  ssh cmd in
+		if (include_stdin)
+		{
+			pollwrap_add_fd_rwx(pw, 0, SELECT_R);
+		}
 
         if (toplevel_callback_pending()) {
             ret = pollwrap_poll_instant(pw);

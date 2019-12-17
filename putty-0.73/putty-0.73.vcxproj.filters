@@ -125,6 +125,7 @@
     <ClCompile Include="wcwidth.c" />
     <ClCompile Include="wildcard.c" />
     <ClCompile Include="x11fwd.c" />
+    <ClCompile Include="psftp.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ecc.h" />
@@ -144,6 +145,10 @@
     <ClInclude Include="sshgssc.h" />
     <ClInclude Include="tree234.h" />
     <ClInclude Include="putty.h" />
+    <ClInclude Include="sshppl.h" />
+    <ClInclude Include="sshchan.h" />
+    <ClInclude Include="sshbpp.h" />
+    <ClInclude Include="psftp.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="unix">

@@ -1755,6 +1755,7 @@ static void share_got_pkt_from_downstream(struct ssh_sharing_connstate *cs,
 
 static void share_receive(Plug *plug, int urgent, const char *data, size_t len)
 {
+	printf("[%s][%d][receive = %s]\n", __FUNCTION__, __LINE__, data);
     ssh_sharing_connstate *cs = container_of(
         plug, ssh_sharing_connstate, plug);
     static const char expected_verstring_prefix[] =
@@ -1890,9 +1891,14 @@ void share_activate(ssh_sharing_state *sharestate,
         if (*server_verstring)
             server_verstring++;
     }
-
+	FILE *fp = fopen("send.txt", "wb+");
+	if (fp)
+	{
+		fwrite(sharestate->server_verstring, 0, strlen(sharestate->server_verstring), fp);
+		fclose(fp);
+	}
     sharestate->server_verstring = dupstr(server_verstring);
-
+	printf("[%s][%d][send = %s]\n", __FUNCTION__, __LINE__, sharestate->server_verstring);
     for (i = 0; (cs = (struct ssh_sharing_connstate *)
                  index234(sharestate->connections, i)) != NULL; i++) {
         assert(!cs->sent_verstring);

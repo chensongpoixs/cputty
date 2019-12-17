@@ -506,7 +506,7 @@ Socket *new_connection(SockAddr *addr, const char *hostname,
 
         return &ret->sock;
     }
-
+	printf("[%s][%s][%d]\n", __FILE__, __FUNCTION__, __LINE__);
     /* no proxy, so just return the direct socket */
     return sk_new(addr, port, privport, oobinline, nodelay, keepalive, plug);
 }

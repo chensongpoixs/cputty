@@ -23,6 +23,7 @@ struct Socket {
 };
 
 struct SocketVtable {
+	// ssh_sharing_conn_plugvt
     Plug *(*plug) (Socket *s, Plug *p);
     /* use a different plug (return the old one) */
     /* if p is NULL, it doesn't change the plug */

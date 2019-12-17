@@ -147,6 +147,7 @@
     <ClCompile Include="portfwd.c" />
     <ClCompile Include="proxy.c" />
     <ClCompile Include="pscp.c" />
+    <ClCompile Include="psftp.c" />
     <ClCompile Include="psftpcommon.c" />
     <ClCompile Include="settings.c" />
     <ClCompile Include="sftp.c" />
@@ -227,6 +228,7 @@
     <ClInclude Include="mpint.h" />
     <ClInclude Include="pgssapi.h" />
     <ClInclude Include="proxy.h" />
+    <ClInclude Include="psftp.h" />
     <ClInclude Include="putty.h" />
     <ClInclude Include="sftp.h" />
     <ClInclude Include="ssh.h" />
@@ -234,7 +236,10 @@
     <ClInclude Include="ssh2connection.h" />
     <ClInclude Include="ssh2transport.h" />
     <ClInclude Include="sshblowf.h" />
+    <ClInclude Include="sshbpp.h" />
+    <ClInclude Include="sshchan.h" />
     <ClInclude Include="sshgssc.h" />
+    <ClInclude Include="sshppl.h" />
     <ClInclude Include="tree234.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

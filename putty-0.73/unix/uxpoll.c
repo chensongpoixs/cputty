@@ -46,8 +46,7 @@ void pollwrap_free(pollwrapper *pw)
 void pollwrap_clear(pollwrapper *pw)
 {
     pw->nfd = 0;
-    for (pollwrap_fdtopos *f2p;
-         (f2p = delpos234(pw->fdtopos, 0)) != NULL ;)
+    for (pollwrap_fdtopos *f2p; (f2p = delpos234(pw->fdtopos, 0)) != NULL ;)
         sfree(f2p);
 }
 

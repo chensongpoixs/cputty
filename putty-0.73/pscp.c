@@ -193,11 +193,12 @@ static bool ssh_scp_recv(void *vbuf, size_t len)
 
 /*
  * Loop through the ssh connection and authentication process.
+ * 
  */
 static void ssh_scp_init(void)
 {
     while (!backend_sendok(backend)) {
-		printf("[%s][%d]\n", __FUNCTION__, __LINE__);
+		printf("[%s][%s][%d]run\n", __FILE__, __FUNCTION__, __LINE__);
         if (backend_exitcode(backend) >= 0) {
             errs++;
             return;
@@ -207,7 +208,7 @@ static void ssh_scp_init(void)
             return;                    /* doom */
         }
     }
-
+	printf("[%s][%s][%d]end\n", __FILE__, __FUNCTION__, __LINE__);
     /* Work out which backend we ended up using. */
     if (!ssh_fallback_cmd(backend))
         using_sftp = main_cmd_is_sftp;
@@ -297,7 +298,7 @@ struct sftp_packet *sftp_wait_for_reply(struct sftp_request *req)
  */
 static void do_cmd(char *host, char *user, char *cmd)
 {
-    const char *err;
+	const char *err;
     char *realhost;
     LogContext *logctx;
 
@@ -426,6 +427,8 @@ static void do_cmd(char *host, char *user, char *cmd)
      */
     conf_set_str(conf, CONF_remote_cmd2, "");
     if (try_sftp) {
+		printf("[%s][%s][%d][cmd = %s]\n", __FILE__, __FUNCTION__, __LINE__, cmd);
+
         /* First choice is SFTP subsystem. */
         main_cmd_is_sftp = true;
         conf_set_str(conf, CONF_remote_cmd, "sftp");
@@ -450,6 +453,8 @@ static void do_cmd(char *host, char *user, char *cmd)
             conf_set_bool(conf, CONF_ssh_subsys2, false);
         }
     } else {
+		printf("[%s][%s][%d][cmd = %s]\n", __FILE__, __FUNCTION__, __LINE__, cmd);
+
         /* Don't try SFTP at all; just try the scp command. */
         main_cmd_is_sftp = false;
         conf_set_str(conf, CONF_remote_cmd, cmd);
@@ -807,7 +812,11 @@ int scp_send_filename(const char *name, uint64_t size, int permissions)
         return response();
     }
 }
-
+/**
+* 不加密传输文件
+* @data  文件数据
+* @len   文件数据的大小
+*/
 int scp_send_filedata(char *data, int len)
 {
     if (using_sftp) {
@@ -829,7 +838,7 @@ int scp_send_filedata(char *data, int len)
                 return 1;
             }
         }
-
+		// 发送文件
         xfer_upload_data(scp_sftp_xfer, data, len);
 
         scp_sftp_fileoffset += len;
@@ -1654,6 +1663,7 @@ static void source(const char *src)
         if ((j = read_from_file(f, transbuf, k)) != k) {
             bump("%s: Read error", src);
         }
+		// 阻塞式的发送数据
         if (scp_send_filedata(transbuf, k))
             bump("%s: Network error occurred", src);
 
@@ -1661,7 +1671,7 @@ static void source(const char *src)
             stat_bytes += k;
             if (time(NULL) != stat_lasttime || i + k == size) {
                 stat_lasttime = time(NULL);
-				printf("[%s][%d][stat_starttime = %lld][stat_lasttime = %lld]\n", __FUNCTION__, __LINE__, stat_starttime, stat_lasttime);
+				printf("[%s][%s][%d][stat_starttime = %lld][stat_lasttime = %lld]\n", __FILE__, __FUNCTION__, __LINE__, (long long int)stat_starttime, (long long int)stat_lasttime);
                 print_stats(last, size, stat_bytes,
                             stat_starttime, stat_lasttime);
             }
@@ -1726,6 +1736,7 @@ static void rsource(const char *src)
  */
 static void sink(const char *targ, const char *src)
 {
+	printf("[%s][%s][%d]\n", __FILE__, __FUNCTION__, __LINE__);
     char *destfname;
     bool targisdir = false;
     bool exists;
@@ -1919,7 +1930,7 @@ static void sink(const char *targ, const char *src)
                 if (time(NULL) > stat_lasttime ||
                     received + read == act.size) {
                     stat_lasttime = time(NULL);
-					printf("[%s][%d][stat_starttime = %lld][stat_lasttime = %lld]\n", __FUNCTION__, __LINE__, stat_starttime, stat_lasttime);
+					printf("[%s][%d][stat_starttime = %lld][stat_lasttime = %lld]\n", __FUNCTION__, __LINE__, (long long int)stat_starttime, (long long int)stat_lasttime);
                     print_stats(stat_name, act.size, stat_bytes,
                                 stat_starttime, stat_lasttime);
                 }
@@ -2000,15 +2011,19 @@ static void toremote(int argc, char *argv[])
                     preserve ? " -p" : "",
                     targetshouldbedirectory ? " -d" : "", targ);
 	//[toremote][1992][host = 47.254.38.99][user = root][cmd = scp -t /root/test/chensong.txt]
-	printf("[%s][%d][host = %s][user = %s][cmd = %s]\n", __FUNCTION__, __LINE__, host, user, cmd);
+	printf("[%s][%d][host = %s][user = %s][cmd = %s]run\n", __FUNCTION__, __LINE__, host, user, cmd);
     do_cmd(host, user, cmd);
     sfree(cmd);
+	printf("[%s][%d][host = %s][user = %s][cmd end]\n", __FUNCTION__, __LINE__, host, user);
 
     if (scp_source_setup(targ, targetshouldbedirectory))
         return;
 
     for (i = 0; i < argc - 1; i++) {
         src = argv[i];
+
+		printf("[%s][%d][host = %s][user = %s][arg = %s]\n", __FUNCTION__, __LINE__, host, user, src);
+
         if (colon(src) != NULL) {
             tell_user(stderr, "%s: Remote to remote not supported\n", src);
             errs++;
@@ -2152,6 +2167,7 @@ static void get_dir_list(int argc, char *argv[])
     }
     *p++ = '\'';
     *p = '\0';
+	printf("[%s][%d][host = %s][user = %s][cmd = %s]\n", __FUNCTION__, __LINE__, host, user, cmd);
 
     do_cmd(host, user, cmd);
     sfree(cmd);
@@ -2342,14 +2358,18 @@ int psftp_main(int argc, char *argv[])
         else
             tolocal(argc, argv);
     }
-
+	printf("[%s][%s][%d]backend_connected\n", __FILE__, __FUNCTION__, __LINE__);
     if (backend && backend_connected(backend)) {
         char ch;
+		printf("[%s][%s][%d]backend_special\n", __FILE__, __FUNCTION__, __LINE__);
         backend_special(backend, SS_EOF, 0);
+		printf("[%s][%s][%d]ssh_scp_recv\n", __FILE__, __FUNCTION__, __LINE__);
         sent_eof = true;
         ssh_scp_recv(&ch, 1);
     }
+	printf("[%s][%s][%d]random_save_seed\n", __FILE__, __FUNCTION__, __LINE__);
     random_save_seed();
+	printf("[%s][%s][%d]random_save_seed end\n", __FILE__, __FUNCTION__, __LINE__);
 
     cmdline_cleanup();
     if (backend) {

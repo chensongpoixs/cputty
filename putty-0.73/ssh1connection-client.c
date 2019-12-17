@@ -409,7 +409,9 @@ static size_t ssh1mainchan_write(
 
     return 0;
 }
-
+/**
+* write msg type code
+*/
 static void ssh1mainchan_write_eof(SshChannel *sc)
 {
     struct ssh1_connection_state *s =

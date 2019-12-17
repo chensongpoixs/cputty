@@ -554,7 +554,7 @@ static Socket *sk_net_accept(accept_ctx_t ctx, Plug *plug)
 
 static int try_connect(NetSocket *sock)
 {
-	printf("[%s][%d]\n", __FUNCTION__, __LINE__);
+	printf("[%s][%s][%d]\n", __FILE__, __FUNCTION__, __LINE__);
     int s;
     union sockaddr_union u;
     const union sockaddr_union *sa;
@@ -596,7 +596,6 @@ static int try_connect(NetSocket *sock)
 
     if (sock->oobinline) {
         int b = 1;
-		//SO_OOBINLINE 让接收到的带外数据继续在线留存
         if (setsockopt(s, SOL_SOCKET, SO_OOBINLINE,
                        (void *) &b, sizeof(b)) < 0) {
             err = errno;
@@ -1658,11 +1657,7 @@ SockAddr *unix_sock_addr(const char *path)
     ret->refcount = 1;
     return ret;
 }
-/**
-* 创建socket 
-* @param listendaddr
-* @param plug
-*/
+
 Socket *new_unix_listener(SockAddr *listenaddr, Plug *plug)
 {
     int s;
@@ -1714,8 +1709,7 @@ Socket *new_unix_listener(SockAddr *listenaddr, Plug *plug)
 #   pragma GCC diagnostic push
 #   pragma GCC diagnostic ignored "-Wstringop-truncation"
 #endif // __GNUC__ >= 8
-	printf("[%s][%d][listenaddr->hostname = %s]\n", __FUNCTION__, __LINE__, listenaddr->hostname);
-	strncpy(u.su.sun_path, listenaddr->hostname, sizeof(u.su.sun_path) - 1);
+    strncpy(u.su.sun_path, listenaddr->hostname, sizeof(u.su.sun_path)-1);
 #if __GNUC__ >= 8
 #   pragma GCC diagnostic pop
 #endif // __GNUC__ >= 8
